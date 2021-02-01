@@ -1,9 +1,6 @@
 package x.snowroller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientSocket {
@@ -12,7 +9,7 @@ public class ClientSocket {
     public static void main(String[] args) {
 
         try {
-            Socket socket = new Socket("localhost", 5050);
+            Socket socket = new Socket("178.174.162.51", 5050);
 
             var output = new PrintWriter(socket.getOutputStream());
             output.println("Hello from client");
@@ -22,8 +19,6 @@ public class ClientSocket {
 
             output.close();
             socket.close();
-
-            //Do other things...
 
         } catch (IOException e) {
             e.printStackTrace();

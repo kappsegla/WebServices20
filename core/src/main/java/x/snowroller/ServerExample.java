@@ -13,14 +13,28 @@ public class ServerExample {
         try {
             //TCP/IP
             ServerSocket serverSocket = new ServerSocket(5050);
-            Socket socket = serverSocket.accept();
+            System.out.println(Thread.currentThread());
 
-            var input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            while (true) {
+                Socket socket = serverSocket.accept();
+
+                Thread thread = new Thread(() -> handleConnection(socket));
+                thread.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void handleConnection(Socket socket) {
+        System.out.println(Thread.currentThread());
+        try {
+            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println(input.readLine());
             var output = new PrintWriter(socket.getOutputStream());
             output.println("Hello from Server");
             output.flush();
-
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
