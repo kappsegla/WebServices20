@@ -45,10 +45,22 @@ public class ServerExample {
             }
             var output = new PrintWriter(socket.getOutputStream());
             String page = """
-                    
-                    
-                    """;
-            output.println(page);
+                    <html>
+                    <head>
+                        <title>Hello World!</title>
+                    </head>
+                    <body>
+                    <h1>Hello there</h1>
+                    <div>First page</div>
+                    </body>                    
+                    </html>""";
+
+            output.println("HTTP/1.1 200 OK");
+            output.println("Content-Length:" + page.getBytes().length);
+            output.println("Content-Type:text/html");
+            output.println("");
+            output.print(page);
+
             output.flush();
             socket.close();
         } catch (IOException e) {
