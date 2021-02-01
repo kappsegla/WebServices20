@@ -24,8 +24,6 @@ public class ServerExample {
                 Socket socket = serverSocket.accept();
 
                 executorService.execute(()-> handleConnection(socket));
-//                Thread thread = new Thread(() -> handleConnection(socket));
-//                thread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
