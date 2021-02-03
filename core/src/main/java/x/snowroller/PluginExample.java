@@ -2,6 +2,8 @@ package x.snowroller;
 
 import x.snowroller.spi.Page;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -13,8 +15,7 @@ public class PluginExample {
     public static void main(String[] args) {
         ServiceLoader<Page> loader = ServiceLoader.load(Page.class);
 
-
-        for( var page : loader ) {
+        for( Page page : loader ) {
             page.execute();
         }
     }
