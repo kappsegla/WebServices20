@@ -11,7 +11,6 @@ public class IteratorExample {
             System.out.println(val);
         }
 
-
         Iterator<Integer> iterator = myCollection.iterator();
         while(iterator.hasNext())
         {
