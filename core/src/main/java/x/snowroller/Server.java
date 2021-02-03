@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+
     public static void main(String[] args) {
         System.out.println("Hello World!");
         //https://dzone.com/articles/simple-http-server-in-java
