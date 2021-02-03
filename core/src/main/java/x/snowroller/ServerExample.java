@@ -72,17 +72,17 @@ public class ServerExample {
 
 
     private static void createJsonResponse(){
-
-
-        var todos = new Todos();
-        todos.todos = new ArrayList<>();
-        todos.todos.add(new Todo(1,"Todo 1",false));
-        todos.todos.add(new Todo(2,"Todo 2",false));
-
-        JsonConverter converter = new JsonConverter();
-
-        var json = converter.convertToJson(todos);
-        System.out.println(json);
+//
+//
+//        var todos = new Todos();
+//        todos.todos = new ArrayList<>();
+//        todos.todos.add(new Todo(1,"Todo 1",false));
+//        todos.todos.add(new Todo(2,"Todo 2",false));
+//
+//        JsonConverter converter = new JsonConverter();
+//
+//        var json = converter.convertToJson(todos);
+//        System.out.println(json);
     }
 }
 class Todo{
