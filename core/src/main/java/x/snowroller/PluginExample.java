@@ -4,8 +4,9 @@ import x.snowroller.spi.Page;
 
 import java.util.ServiceLoader;
 
+//Build with maven package
 //Run with:
-//java -p "core.jar;spi.jar;plugin.jar" -m core/x.snowroller.PluginExample
+//java -p "core\target\core-1.0-SNAPSHOT.jar;spi\target\spi-1.0-SNAPSHOT.jar;plugin\target\plugin-1.0-SNAPSHOT.jar" -m core/x.snowroller.PluginExample
 
 public class PluginExample {
 
