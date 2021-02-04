@@ -8,8 +8,11 @@ import java.util.ServiceLoader;
 // mvn package
 //Open Terminal and do:
 // cd core\target
-//Run with:
+//On Windows Run with:
 // java --module-path core-1.0-SNAPSHOT.jar;modules -m core/x.snowroller.PluginExample
+//On Mac Run with:
+// java --module-path core-1.0-SNAPSHOT.jar:modules -m core/x.snowroller.PluginExample
+
 
 public class PluginExample {
 
