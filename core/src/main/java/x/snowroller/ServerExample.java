@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,21 +68,16 @@ public class ServerExample {
         }
     }
 
-
-
-
     private static void createJsonResponse(){
-//
-//
-//        var todos = new Todos();
-//        todos.todos = new ArrayList<>();
-//        todos.todos.add(new Todo(1,"Todo 1",false));
-//        todos.todos.add(new Todo(2,"Todo 2",false));
-//
-//        JsonConverter converter = new JsonConverter();
-//
-//        var json = converter.convertToJson(todos);
-//        System.out.println(json);
+        var todos = new Todos();
+        todos.todos = new ArrayList<>();
+        todos.todos.add(new Todo(1,"Todo 1",false));
+        todos.todos.add(new Todo(2,"Todo 2",false));
+
+        JsonConverter converter = new JsonConverter();
+
+        var json = converter.convertToJson(todos);
+        System.out.println(json);
     }
 }
 class Todo{
