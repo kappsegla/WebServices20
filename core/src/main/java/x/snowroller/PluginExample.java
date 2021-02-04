@@ -18,6 +18,7 @@ public class PluginExample {
 
     public static void main(String[] args) {
         ServiceLoader<Page> loader = ServiceLoader.load(Page.class);
+        System.out.println("Test");
 
         for (Page page : loader) {
             page.execute();
