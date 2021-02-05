@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,8 +13,7 @@ public class ServerExample {
 
     public static void main(String[] args) {
 
-//        File file = new File("web\\index.html");
-//        new ServerExample().readFromFile(file);
+
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -44,24 +44,29 @@ public class ServerExample {
                     break;
             }
             var output = new PrintWriter(socket.getOutputStream());
-            String page = """
-                    <html>
-                    <head>
-                        <title>Hello World!</title>
-                    </head>
-                    <body>
-                    <h1>Hello there</h1>
-                    <div>First page</div>
-                    </body>                    
-                    </html>""";
+//            String page = """
+//                    <html>
+//                    <head>
+//                        <title>Hello World!</title>
+//                    </head>
+//                    <body>
+//                    <h1>Hello there</h1>
+//                    <div>First page</div>
+//                    </body>
+//                    </html>""";
+            File file = new File("web"+File.separator+"index.html");
+            byte[] page = readFromFile(file);
 
             output.println("HTTP/1.1 200 OK");
-            output.println("Content-Length:" + page.getBytes().length);
+            output.println("Content-Length:" + page.length);
             output.println("Content-Type:text/html");  //application/json
             output.println("");
-            output.print(page);
-
+            //output.print(page);
             output.flush();
+
+            var dataOut = new BufferedOutputStream(socket.getOutputStream());
+            dataOut.write(page);
+            dataOut.flush();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,9 +85,7 @@ public class ServerExample {
         System.out.println(json);
     }
 
-
-
-    private byte[] readFromFile(File file) {
+    private static byte[] readFromFile(File file) {
         byte[] content = new byte[0];
         System.out.println("Does file exists: " + file.exists());
         if (file.exists() && file.canRead()) {
