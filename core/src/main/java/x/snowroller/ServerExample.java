@@ -1,9 +1,6 @@
 package x.snowroller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,6 +12,9 @@ public class ServerExample {
 
     public static void main(String[] args) {
 
+//        File file = new File("web\\index.html");
+//        new ServerExample().readFromFile(file);
+
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         try {
@@ -25,7 +25,7 @@ public class ServerExample {
             while (true) {
                 Socket socket = serverSocket.accept();
 
-                executorService.execute(()-> handleConnection(socket));
+                executorService.execute(() -> handleConnection(socket));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,10 +37,10 @@ public class ServerExample {
         try {
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            while(true) {
+            while (true) {
                 String headerLine = input.readLine();
                 System.out.println(headerLine);
-                if( headerLine.isEmpty())
+                if (headerLine.isEmpty())
                     break;
             }
             var output = new PrintWriter(socket.getOutputStream());
@@ -68,19 +68,36 @@ public class ServerExample {
         }
     }
 
-    private static void createJsonResponse(){
+    private static void createJsonResponse() {
         var todos = new Todos();
         todos.todos = new ArrayList<>();
-        todos.todos.add(new Todo(1,"Todo 1",false));
-        todos.todos.add(new Todo(2,"Todo 2",false));
+        todos.todos.add(new Todo(1, "Todo 1", false));
+        todos.todos.add(new Todo(2, "Todo 2", false));
 
         JsonConverter converter = new JsonConverter();
 
         var json = converter.convertToJson(todos);
         System.out.println(json);
     }
+
+
+
+    private byte[] readFromFile(File file) {
+        byte[] content = new byte[0];
+        System.out.println("Does file exists: " + file.exists());
+        if (file.exists() && file.canRead()) {
+            try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                content = new byte[(int)file.length()];
+                int count = fileInputStream.read(content);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return content;
+    }
 }
-class Todo{
+
+class Todo {
     int id;
     String title;
     boolean completed;
@@ -91,6 +108,7 @@ class Todo{
         this.completed = completed;
     }
 }
-class Todos{
+
+class Todos {
     List<Todo> todos;
 }
