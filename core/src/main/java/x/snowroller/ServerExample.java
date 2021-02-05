@@ -53,12 +53,12 @@ public class ServerExample {
 //                    <div>First page</div>
 //                    </body>
 //                    </html>""";
-            File file = new File("web"+File.separator+"cat.png");
+            File file = new File("web"+File.separator+"index.html");
             byte[] page = readFromFile(file);
 
             output.println("HTTP/1.1 200 OK");
             output.println("Content-Length:" + page.length);
-            output.println("Content-Type:image/png");  //application/json
+            output.println("Content-Type:text/html");  //application/json
             output.println("");
             //output.print(page);
             output.flush();
