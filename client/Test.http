@@ -1,6 +1,33 @@
 GET http://localhost:5050/
 Host: localhost
-Accept: text/html
-
 
 ###
+
+GET http://localhost:5050/index.html
+Host: localhost
+
+###
+
+GET http://localhost:5050/cat.png
+Host: localhost
+
+###
+
+GET http://localhost:5050/upload?first=Martin&second=Java+Server
+Host: localhost
+
+###
+
+POST http://localhost:5050/upload
+Host: localhost
+Content-Type: application/json
+
+{
+  "type": "This is a json body",
+  "value": 1
+}
+###
+
+GET http://localhost:5050/products
+
+

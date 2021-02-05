@@ -85,6 +85,12 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/web</directory><!-- from -->
+                <targetPath>${project.build.directory}/web</targetPath><!-- to -->
+            </resource>
+        </resources>
     </build>
     <dependencies>
         <dependency>
