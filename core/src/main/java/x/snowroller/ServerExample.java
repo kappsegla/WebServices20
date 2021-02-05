@@ -1,19 +1,18 @@
 package x.snowroller;
 
+import x.snowroller.models.Todo;
+import x.snowroller.models.Todos;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerExample {
 
     public static void main(String[] args) {
-
-
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -54,12 +53,12 @@ public class ServerExample {
 //                    <div>First page</div>
 //                    </body>
 //                    </html>""";
-            File file = new File("web"+File.separator+"index.html");
+            File file = new File("web"+File.separator+"cat.png");
             byte[] page = readFromFile(file);
 
             output.println("HTTP/1.1 200 OK");
             output.println("Content-Length:" + page.length);
-            output.println("Content-Type:text/html");  //application/json
+            output.println("Content-Type:image/png");  //application/json
             output.println("");
             //output.print(page);
             output.flush();
@@ -100,18 +99,3 @@ public class ServerExample {
     }
 }
 
-class Todo {
-    int id;
-    String title;
-    boolean completed;
-
-    public Todo(int id, String title, boolean completed) {
-        this.id = id;
-        this.title = title;
-        this.completed = completed;
-    }
-}
-
-class Todos {
-    List<Todo> todos;
-}
