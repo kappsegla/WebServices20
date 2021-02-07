@@ -1,11 +1,16 @@
 package x.snowroller.models;
 
-public class Todo {
-    int id;
-    String title;
-    boolean completed;
+import lombok.Getter;
+import lombok.Setter;
 
-    public Todo(int id, String title, boolean completed) {
+@Getter
+@Setter
+public class Todo {
+    public String id;
+    public String title;
+    public boolean completed;
+
+    public Todo(String id, String title, boolean completed) {
         this.id = id;
         this.title = title;
         this.completed = completed;

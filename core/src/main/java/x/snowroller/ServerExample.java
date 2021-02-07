@@ -42,6 +42,7 @@ public class ServerExample {
                 if (headerLine.isEmpty())
                     break;
             }
+
             var output = new PrintWriter(socket.getOutputStream());
 //            String page = """
 //                    <html>
@@ -75,8 +76,8 @@ public class ServerExample {
     private static void createJsonResponse() {
         var todos = new Todos();
         todos.todos = new ArrayList<>();
-        todos.todos.add(new Todo(1, "Todo 1", false));
-        todos.todos.add(new Todo(2, "Todo 2", false));
+        todos.todos.add(new Todo("1", "Todo 1", false));
+        todos.todos.add(new Todo("2", "Todo 2", false));
 
         JsonConverter converter = new JsonConverter();
 
