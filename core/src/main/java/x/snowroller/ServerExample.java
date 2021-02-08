@@ -90,12 +90,6 @@ public class ServerExample {
         }
     }
 
-    private static void handleTodosURL() {
-
-
-    }
-
-
     private static String readHeaders(BufferedReader input) throws IOException {
         String requestedUrl = "";
         while (true) {
@@ -121,10 +115,6 @@ public class ServerExample {
 
         var json = converter.convertToJson(todos);
         System.out.println(json);
-    }
-
-    private static String handleProductsURL(){
-        return "";
     }
 }
 
