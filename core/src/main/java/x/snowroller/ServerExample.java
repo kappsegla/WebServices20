@@ -95,6 +95,7 @@ public class ServerExample {
 
     }
 
+
     private static String readHeaders(BufferedReader input) throws IOException {
         String requestedUrl = "";
         while (true) {
