@@ -7,7 +7,10 @@ import x.snowroller.models.Todos;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,12 +39,24 @@ public class ServerExample {
         try {
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            while (true) {
-                String headerLine = input.readLine();
-                System.out.println(headerLine);
-                if (headerLine.isEmpty())
-                    break;
-            }
+            String url = readHeaders(input);
+
+//            if( url.equals("/products"))
+//                handleProductsURL();
+//            else if( url.equals("/todos"))
+//                handleTodosURL();
+//
+//            Map<String,  URLHandler > routes = new HashMap<>();
+//
+//            routes.put("/products", new ProductsHandler());
+//            routes.put("/todos", new TodosHandler());
+//
+//            var handler = routes.get(url);
+//            if( handler != null)
+//                handler.handleURL();
+//            else
+//                //It's a file
+
 
             var output = new PrintWriter(socket.getOutputStream());
 //            String page = """
@@ -54,12 +69,14 @@ public class ServerExample {
 //                    <div>First page</div>
 //                    </body>
 //                    </html>""";
-            File file = new File("web"+File.separator+"index.html");
+            File file = new File("web" + File.separator + url);
             byte[] page = FileReader.readFromFile(file);
+
+            String contentType = Files.probeContentType(file.toPath());
 
             output.println("HTTP/1.1 200 OK");
             output.println("Content-Length:" + page.length);
-            output.println("Content-Type:text/html");  //application/json
+            output.println("Content-Type:"+contentType);  //application/json
             output.println("");
             //output.print(page);
             output.flush();
@@ -71,6 +88,26 @@ public class ServerExample {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void handleTodosURL() {
+
+
+    }
+
+    private static String readHeaders(BufferedReader input) throws IOException {
+        String requestedUrl = "";
+        while (true) {
+            String headerLine = input.readLine();
+            if( headerLine.startsWith("GET"))
+            {
+                requestedUrl = headerLine.split(" ")[1];
+            }
+            System.out.println(headerLine);
+            if (headerLine.isEmpty())
+                break;
+        }
+        return requestedUrl;
     }
 
     private static void createJsonResponse() {
@@ -85,5 +122,8 @@ public class ServerExample {
         System.out.println(json);
     }
 
+    private static String handleProductsURL(){
+        return "";
+    }
 }
 
