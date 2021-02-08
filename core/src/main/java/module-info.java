@@ -1,5 +1,6 @@
 module core {
     requires x.snowroller.spi;
+    requires x.snowroller.fileutils;
     requires com.google.gson;
 
 //    requires org.mongodb.driver.sync.client;

@@ -1,5 +1,6 @@
 package x.snowroller;
 
+import x.snowroller.fileutils.FileReader;
 import x.snowroller.models.Todo;
 import x.snowroller.models.Todos;
 
@@ -23,7 +24,6 @@ public class ServerExample {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-
                 executorService.execute(() -> handleConnection(socket));
             }
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class ServerExample {
 //                    </body>
 //                    </html>""";
             File file = new File("web"+File.separator+"index.html");
-            byte[] page = readFromFile(file);
+            byte[] page = FileReader.readFromFile(file);
 
             output.println("HTTP/1.1 200 OK");
             output.println("Content-Length:" + page.length);
@@ -85,18 +85,5 @@ public class ServerExample {
         System.out.println(json);
     }
 
-    private static byte[] readFromFile(File file) {
-        byte[] content = new byte[0];
-        System.out.println("Does file exists: " + file.exists());
-        if (file.exists() && file.canRead()) {
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                content = new byte[(int)file.length()];
-                int count = fileInputStream.read(content);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return content;
-    }
 }
 
