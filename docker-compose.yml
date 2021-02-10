@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 services:
   mongodb:
     image: mongo:latest
@@ -10,4 +10,15 @@ services:
       - ./mongodb:/data/db
     ports:
       - "27017:27017"
-    restart: unless-stopped
+    restart: "unless-stopped"
+  serverexample:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: serverexample
+    container_name: server
+    volumes:
+      - ./core/target/web:/web
+    ports:
+      - "5050:5050"
+    restart: "no"
