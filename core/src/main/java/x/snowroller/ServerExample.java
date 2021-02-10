@@ -73,6 +73,8 @@ public class ServerExample {
 //                    <div>First page</div>
 //                    </body>
 //                    </html>""";
+            //Kolla att url inte matchar någon av våra routes.
+
             File file = new File("web" + File.separator + url);
             byte[] page = FileReader.readFromFile(file);
 
@@ -98,6 +100,7 @@ public class ServerExample {
         String requestedUrl = "";
         while (true) {
             String headerLine = input.readLine();
+
             if( headerLine.startsWith("GET"))
             {
                 requestedUrl = headerLine.split(" ")[1];
