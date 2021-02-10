@@ -113,23 +113,15 @@ public class ServerExample {
     }
 
     private static void createJsonResponse() {
+        var todos = new Todos();
+        todos.todos = new ArrayList<>();
+        todos.todos.add(new Todo("1", "Todo 1", false));
+        todos.todos.add(new Todo("2", "Todo 2", false));
 
-        var to = new Todo("1","Walk the dog",false);
-        var id = to.id();
+        JsonConverter converter = new JsonConverter();
 
-        var cto = new Todo(to.id(), to.title(),true);
-
-
-
-//        var todos = new Todos();
-//        todos.todos = new ArrayList<>();
-//        todos.todos.add(new Todo("1", "Todo 1", false));
-//        todos.todos.add(new Todo("2", "Todo 2", false));
-//
-//        JsonConverter converter = new JsonConverter();
-//
-//        var json = converter.convertToJson(todos);
-//        System.out.println(json);
+        var json = converter.convertToJson(todos);
+        System.out.println(json);
     }
 }
 
