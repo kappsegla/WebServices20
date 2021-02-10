@@ -1,15 +1,12 @@
 version: "3.9"
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - ./mongodb:/data/db
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=<YourStrong!Passw0rd>
     ports:
-      - "27017:27017"
+      - 1401:1433
     restart: "unless-stopped"
   serverexample:
     build:
@@ -22,3 +19,14 @@ services:
     ports:
       - "5050:5050"
     restart: "no"
+#    mongodb:
+    #    image: mongo:latest
+    #    container_name: mongodb
+    #    environment:
+    #      - PUID=1000
+    #      - PGID=1000
+    #    volumes:
+    #      - ./mongodb:/data/db
+    #    ports:
+    #      - "27017:27017"
+    #    restart: "unless-stopped"
