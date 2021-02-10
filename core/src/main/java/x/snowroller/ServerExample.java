@@ -1,5 +1,8 @@
 package x.snowroller;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import x.snowroller.fileutils.FileReader;
 import x.snowroller.models.Todo;
 import x.snowroller.models.Todos;
@@ -14,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Data
 public class ServerExample {
 
     public static void main(String[] args) {
@@ -106,15 +110,23 @@ public class ServerExample {
     }
 
     private static void createJsonResponse() {
-        var todos = new Todos();
-        todos.todos = new ArrayList<>();
-        todos.todos.add(new Todo("1", "Todo 1", false));
-        todos.todos.add(new Todo("2", "Todo 2", false));
 
-        JsonConverter converter = new JsonConverter();
+        var to = new Todo("1","Walk the dog",false);
+        var id = to.id();
 
-        var json = converter.convertToJson(todos);
-        System.out.println(json);
+        var cto = new Todo(to.id(), to.title(),true);
+
+
+
+//        var todos = new Todos();
+//        todos.todos = new ArrayList<>();
+//        todos.todos.add(new Todo("1", "Todo 1", false));
+//        todos.todos.add(new Todo("2", "Todo 2", false));
+//
+//        JsonConverter converter = new JsonConverter();
+//
+//        var json = converter.convertToJson(todos);
+//        System.out.println(json);
     }
 }
 

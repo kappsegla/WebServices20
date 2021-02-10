@@ -1,5 +1,6 @@
 package x.snowroller;
 
+import lombok.SneakyThrows;
 import x.snowroller.spi.CurrencyConverter;
 import x.snowroller.spi.Page;
 
@@ -23,12 +24,6 @@ public class PluginExample {
 
         for (Page page : loader) {
             page.execute();
-        }
-
-        ServiceLoader<CurrencyConverter> currencyLoader = ServiceLoader.load(CurrencyConverter.class);
-
-        for (CurrencyConverter converter : currencyLoader) {
-            System.out.println("10 kr = " + converter.convert(10.0f) + " €");
         }
     }
 }
