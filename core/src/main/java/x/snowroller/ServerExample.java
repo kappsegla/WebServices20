@@ -1,32 +1,28 @@
 package x.snowroller;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import x.snowroller.fileutils.FileReader;
 import x.snowroller.models.Todo;
 import x.snowroller.models.Todos;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Data
 public class ServerExample {
 
     public static void main(String[] args) {
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        try {
-            //TCP/IP
-            ServerSocket serverSocket = new ServerSocket(5050);
+        try(ServerSocket serverSocket = new ServerSocket(5050)) {
             System.out.println(Thread.currentThread());
 
             while (true) {
@@ -41,87 +37,111 @@ public class ServerExample {
     private static void handleConnection(Socket socket) {
         System.out.println(Thread.currentThread());
         try {
-            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            String url = readHeaders(input);
-
-//            if( url.equals("/products"))
-//                handleProductsURL();
-//            else if( url.equals("/todos"))
-//                handleTodosURL();
-//
-//            Map<String,  URLHandler > routes = new HashMap<>();
-//
-//            routes.put("/products", new ProductsHandler());
-//            routes.put("/todos", new TodosHandler());
-//
-//            var handler = routes.get(url);
-//            if( handler != null)
-//                handler.handleURL();
-//            else
-//                //It's a file
-
-
-            var output = new PrintWriter(socket.getOutputStream());
-//            String page = """
-//                    <html>
-//                    <head>
-//                        <title>Hello World!</title>
-//                    </head>
-//                    <body>
-//                    <h1>Hello there</h1>
-//                    <div>First page</div>
-//                    </body>
-//                    </html>""";
-            //Kolla att url inte matchar någon av våra routes.
-
-            File file = new File("web" + File.separator + url);
-            byte[] page = FileReader.readFromFile(file);
-
-            String contentType = Files.probeContentType(file.toPath());
-
-            output.println("HTTP/1.1 200 OK");
-            output.println("Content-Length:" + page.length);
-            output.println("Content-Type:"+contentType);  //application/json
-            output.println("");
-            //output.print(page);
-            output.flush();
-
+            BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
             var dataOut = new BufferedOutputStream(socket.getOutputStream());
-            dataOut.write(page);
-            dataOut.flush();
+
+            Request request = readRequest(input);
+
+            Response response = createResponse(request);
+
+            sendResponse(dataOut, response);
+
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static String readHeaders(BufferedReader input) throws IOException {
-        String requestedUrl = "";
-        while (true) {
-            String headerLine = input.readLine();
+    private static void sendResponse(BufferedOutputStream output, Response response) throws IOException {
+        String header = "HTTP/1.1 " + response.status.statusCode() + "\r\n";
 
-            if( headerLine.startsWith("GET"))
-            {
-                requestedUrl = headerLine.split(" ")[1];
-            }
-            System.out.println(headerLine);
-            if (headerLine.isEmpty())
-                break;
-        }
-        return requestedUrl;
+        if (response.getLength() > 0)
+            header += "Content-Type:" + response.contentType + "\r\n";
+        header += "Content-Length: " + response.getLength() + "\r\n";
+        header += "\r\n";
+        output.write(header.getBytes(StandardCharsets.UTF_8));
+        output.write(response.content);
+        output.flush();
     }
 
-    private static void createJsonResponse() {
+    private static Response createResponse(Request request) throws IOException {
+        Response response = new Response();
+
+        if (request.isGetRoute("/todos")) {
+            response.setContent(createJsonResponse().getBytes(StandardCharsets.UTF_8));
+            response.contentType = "application/json";
+        } else if (request.isPostRoute("/todos")) {
+            response.contentType = "application/json";
+            response.setContent(request.getBody());
+        } else if (request.isGetRoute("/urlparams")) {
+            var urlParams = request.getUrlParams().entrySet();
+            response.contentType = "text/plain";
+            String answer = urlParams.toString();
+            response.setContent(answer.getBytes(StandardCharsets.UTF_8));
+        } else if (request.isGetRoute("/coffee")) {
+            response.setStatus(Status.HTTP_TEAPOT);
+        } else {
+            File file = new File("web" + File.separator + request.getUrl());
+            if (file.exists()) {
+                response.contentType = Files.probeContentType(file.toPath());
+                response.setContent(FileReader.readFromFile(file));
+            } else {
+                response.setStatus(Status.HTTP_404);
+            }
+        }
+        return response;
+    }
+
+    private static Request readRequest(BufferedInputStream input) throws IOException {
+        var request = new Request();
+
+        String headerLine = readLine(input);
+        if (headerLine.startsWith("GET") || headerLine.startsWith("POST") || headerLine.startsWith("HEAD")) {
+            request.setRequestType(headerLine.split(" ")[0]);
+            request.setRequestUrl(headerLine.split(" ")[1]);
+        }
+
+        while (true) {
+            headerLine = readLine(input);
+            System.out.println(headerLine);
+
+            if (headerLine.isEmpty())
+                break;
+
+            var header = headerLine.split(":");
+            request.addHeader(header[0], header[1].trim());
+        }
+
+        if (request.getContentLength() > 0) {
+            request.setBody(input.readNBytes(request.getContentLength()));
+        }
+        return request;
+    }
+
+    public static String readLine(BufferedInputStream inputStream) throws IOException {
+        final int MAX_READ = 4096;
+        byte[] buffer = new byte[MAX_READ];
+        int bytesRead = 0;
+        while (bytesRead < MAX_READ) {
+            buffer[bytesRead++] = (byte) inputStream.read();
+            if (buffer[bytesRead - 1] == '\r') {
+                buffer[bytesRead++] = (byte) inputStream.read();
+                if (buffer[bytesRead - 1] == '\n')
+                    break;
+            }
+        }
+        return new String(buffer, 0, bytesRead - 2, StandardCharsets.UTF_8);
+    }
+
+    private static String createJsonResponse() {
+        JsonConverter converter = new JsonConverter();
+
         var todos = new Todos();
         todos.todos = new ArrayList<>();
         todos.todos.add(new Todo("1", "Todo 1", false));
         todos.todos.add(new Todo("2", "Todo 2", false));
 
-        JsonConverter converter = new JsonConverter();
-
-        var json = converter.convertToJson(todos);
-        System.out.println(json);
+        return converter.convertToJson(todos);
     }
 }
 

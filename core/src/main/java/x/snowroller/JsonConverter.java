@@ -12,5 +12,6 @@ public class JsonConverter {
 
     public String convertToJson(Object object){
         return gson.toJson(object);
+
     }
 }
