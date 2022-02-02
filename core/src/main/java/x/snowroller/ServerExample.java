@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class ServerExample {
 
     public static void main(String[] args) {
-
+        //http://178.174.162.51/
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         try(ServerSocket serverSocket = new ServerSocket(5050)) {

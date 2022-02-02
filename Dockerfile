@@ -59,3 +59,8 @@ ENTRYPOINT [ "java", "--module-path", "/app/core:/app/modules", "-m", "core/x.sn
 #COPY --from=build /src/core/target/modules/plugin-1.0-SNAPSHOT.jar ./modules/plugin.jar
 #COPY --from=build /opt/jdk-mini ./jre
 #ENTRYPOINT [ "/app/jre/bin/java", "--module-path", "/app/jre/:/app/modules", "-m", "core/x.snowroller.ServerExample"]
+
+#FROM adoptopenjdk:16-jre
+#EXPOSE 5050
+#COPY core/target/classes /app/core/
+#ENTRYPOINT [ "java", "--module-path", "/app/core", "-m", "core/x.snowroller.Main"]
